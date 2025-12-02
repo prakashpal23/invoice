@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puma Label (12x5.2 inch)</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #eef2f5;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 400px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #34495e;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: #1a252f;
+            border-bottom: 1px solid #34495e;
+        }
+        .sidebar-header h2 { margin: 0; font-size: 1.2rem; }
+        .sidebar-header p { margin: 5px 0 0; font-size: 0.8rem; color: #bdc3c7; }
+
+        .controls-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .group-title {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 5px;
+        }
+
+        .input-row { margin-bottom: 10px; }
+        .input-row label { display: block; font-size: 0.8rem; margin-bottom: 3px; color: #bdc3c7; }
+        .input-row input, .input-row textarea {
+            width: 93%;
+            padding: 8px;
+            background: #34495e;
+            border: 1px solid #4e6075;
+            color: white;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: sans-serif;
+        }
+        .input-row textarea { resize: vertical; height: 50px; }
+        .input-row input:focus { outline: none; border-color: #e74c3c; }
+
+        #checksum-status {
+            font-size: 0.75rem;
+            color: #f1c40f;
+            margin-top: 4px;
+            font-style: italic;
+            height: 15px;
+        }
+
+        /* PREVIEW AREA */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #dcdde1;
+            padding: 20px;
+        }
+        .canvas-wrapper {
+            background: white;
+            padding: 10px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            max-width: 95%;
+            overflow: auto; 
+        }
+        canvas { display: block; max-width: 100%; height: auto; }
+        
+        button {
+            padding: 12px 30px;
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background-color: #e74c3c; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h2>Puma Style Generator</h2>
+        <p>Size: 12" x 5.2"</p>
+    </div>
+    <div class="controls-container">
+        
+        <div class="group-title">Left Column Details</div>
+        <div class="input-row"><label>Generic Name</label><input type="text" id="l_generic" value="FOOTWEAR" oninput="draw()"></div>
+        <div class="input-row"><label>Article Code</label><input type="text" id="l_article" value="109304 04" oninput="draw()"></div>
+        <div class="input-row"><label>Size</label><input type="text" id="l_size" value="8 UK - 27 cm" oninput="draw()"></div>
+        <div class="input-row"><label>Quantity</label><input type="text" id="l_qty" value="2 N" oninput="draw()"></div>
+        <div class="input-row"><label>Pair Info</label><input type="text" id="l_pair" value="1 Pair" oninput="draw()"></div>
+        <div class="input-row"><label>Price (MRP)</label><input type="text" id="l_price" value="₹ 4999.00" oninput="draw()"></div>
+        <div class="input-row"><label>Mfg Date</label><input type="text" id="l_date" value="August 2025" oninput="draw()"></div>
+        <div class="input-row"><label>Style Name</label><textarea id="l_style" oninput="draw()">Puma Badminton Smash Sprint V1</textarea></div>
+        <div class="input-row"><label>Colour</label><textarea id="l_color" oninput="draw()">Racing Blue-Speed Green-PUMA White</textarea></div>
+        <div class="input-row"><label>Country of Origin</label><input type="text" id="l_country" value="India" oninput="draw()"></div>
+
+        <div class="group-title">Right Column Details</div>
+        <div class="input-row"><label>Marketed By</label><textarea id="r_marketed" oninput="draw()">PUMA Sports India Pvt Ltd.
+Ground floor No 496 Mahadevapura Main Road
+next to Hewlett Packard Service Gate 560048 Bengaluru India</textarea></div>
+
+        <div class="input-row"><label>Consumer Complaints</label><textarea id="r_complaints" oninput="draw()">In charge consumer complaint, PUMA Sports India
+Ground floor No 496 Mahadevapura Main Road
+next to Hewlett Packard Service Gate 560048 Bengaluru India
+Tel: 080-464652319 Customer Care Number: 1800-102-7862
+E-mail: customercareindia@puma.com</textarea></div>
+
+        <div class="input-row"><label>Manufactured By</label><textarea id="r_manufactured" oninput="draw()">Mochiko Shoes
+(A unit of Mochiko Shoes Pvt. Ltd)
+Khasra No 3914, Lal Tapper, Dehradun,
+Uttarakhand (05) 248140 India</textarea></div>
+
+        <div class="group-title">Barcode (Auto-Sum)</div>
+        <div class="input-row">
+            <label>Barcode Number</label>
+            <input type="text" id="bc_val" value="406916252868" oninput="draw()">
+            <div id="checksum-status"></div>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+    <div class="canvas-wrapper">
+        <canvas id="c" width="1200" height="520"></canvas>
+    </div>
+    <button onclick="dl()">Download Label</button>
+</div>
+
+<script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    
+    // DIMENSIONS: 12" x 5.2"
+    const W = 1200;
+    const H = 520;
+    
+    const statusDiv = document.getElementById('checksum-status');
+
+    function get(id) { return document.getElementById(id).value; }
+
+    function calculateEAN13Checksum(code) {
+        const digits = code.split('').slice(0, 12).map(Number);
+        let sum = 0;
+        for (let i = 0; i < 12; i++) {
+            sum += (i % 2 === 0) ? digits[i] * 1 : digits[i] * 3;
+        }
+        const remainder = sum % 10;
+        return remainder === 0 ? 0 : 10 - remainder;
+    }
+
+    function draw() {
+        // Clear background
+        ctx.fillStyle = "#e6e7e8"; 
+        ctx.fillRect(0, 0, W, H);
+        
+        // Main white rounded box
+        ctx.fillStyle = "white";
+        ctx.fillRect(10, 10, W-20, H-20);
+        ctx.strokeStyle = "#333";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(10, 10, W-20, H-20);
+
+        // --- DIVIDER LINES ---
+        const splitX = 500; 
+        const line1Y = 150; 
+        const line2Y = 290; 
+        const verticalStripX = W - 140; 
+        
+        ctx.beginPath(); ctx.moveTo(splitX, 10); ctx.lineTo(splitX, H-10); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(verticalStripX, 10); ctx.lineTo(verticalStripX, H-10); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(splitX, line1Y); ctx.lineTo(verticalStripX, line1Y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(splitX, line2Y); ctx.lineTo(verticalStripX, line2Y); ctx.stroke();
+
+        // --- DRAW CONTENT ---
+        drawLeftColumn(25, 45);
+        drawMarketedBy(splitX + 15, 45);
+        
+        // Barcode area
+        drawAutoSumBarcode(splitX, line1Y, verticalStripX - splitX, line2Y - line1Y);
+        
+        // Bottom section
+        drawComplaints(splitX + 15, line2Y + 25);
+        drawManufacturedBy(verticalStripX, 10, W-10 - verticalStripX, H-20);
+    }
+
+    function drawAutoSumBarcode(x, y, w, h) {
+        let raw = get('bc_val').replace(/\s/g,'');
+        let codeToDraw = raw;
+        statusDiv.innerText = "";
+
+        if (raw.length === 12 && /^\d+$/.test(raw)) {
+            const checksum = calculateEAN13Checksum(raw);
+            codeToDraw = raw + checksum;
+            statusDiv.innerText = "Auto-Added Checksum: " + checksum;
+        } else if (raw.length === 13 && /^\d+$/.test(raw)) {
+            const check = parseInt(raw[12]);
+            const calc = calculateEAN13Checksum(raw);
+            if(check !== calc) {
+                statusDiv.innerText = "Warning: Checksum might be invalid (Expected "+calc+")";
+            }
+        }
+
+        const tempC = document.createElement('canvas');
+        try {
+            // Updated settings to match the screenshot style
+            JsBarcode(tempC, codeToDraw, {
+                format: (codeToDraw.length === 12) ? "UPC" : "EAN13",
+                displayValue: true,
+                fontSize: 24,        // Slightly smaller than before for a cleaner look
+                fontOptions: "",     // Removed "bold" to match screenshot
+                textMargin: 8,       // More space between bars and text
+                height: 100,         // Taller bars
+                width: 4,            // Thick bars
+                margin: 0
+            });
+            
+            // Adjust padding to center it nicely
+            const padX = 30;
+            const padY = 10; 
+            ctx.drawImage(tempC, x + padX, y + padY, w - (padX * 2), h - (padY * 2));
+            
+        } catch(e) {
+            ctx.font = "14px Arial";
+            ctx.fillStyle = "red";
+            ctx.fillText("Invalid Barcode Data", x + 20, y + 40);
+        }
+    }
+
+    function drawLeftColumn(x, startY) {
+        ctx.fillStyle = "black";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+
+        const lineHeight = 39; 
+        const labelFont = "bold 18px Arial";
+        const valueFont = "18px Arial";
+        const labelX = x;
+        const colonX = x + 160;
+        const valueX = x + 175;
+
+        const fields = [
+            { l: "Generic Name", v: get('l_generic') },
+            { l: "Article Code", v: get('l_article'), boldVal: true, sizeVal: "36px" }, 
+            { l: "Size", v: get('l_size') },
+            { l: "Quantity", v: get('l_qty') },
+            { l: "Pair", v: get('l_pair') },
+            { l: "Maximum", v: "", sub: "Retail Price" }, 
+            { l: "Month/Year of", v: get('l_date'), sub: "Manufacture" },
+            { l: "Style", v: get('l_style'), multiline: true },
+            { l: "Colour", v: get('l_color'), multiline: true },
+            { l: "Country of", v: get('l_country'), sub: "Origin" }
+        ];
+
+        let curY = startY;
+
+        fields.forEach(f => {
+            ctx.font = labelFont;
+            ctx.fillText(f.l, labelX, curY);
+            if(f.sub) ctx.fillText(f.sub, labelX, curY + 18);
+            ctx.fillText(":", colonX, curY);
+
+            if(f.l === "Maximum") {
+                const mrp = get('l_price');
+                ctx.font = "bold 32px Arial";
+                ctx.fillText(mrp, valueX, curY - 5);
+                ctx.font = "12px Arial";
+                ctx.fillText("(inclusive of all Taxes)", valueX, curY + 28);
+                curY += 15; 
+            }
+            else if (f.multiline) {
+                ctx.font = valueFont;
+                const words = f.v.split(' ');
+                let line = "";
+                let ly = curY;
+                for(let n = 0; n < words.length; n++) {
+                    const testLine = line + words[n] + " ";
+                    const metrics = ctx.measureText(testLine);
+                    if (metrics.width > 250 && n > 0) {
+                        ctx.fillText(line, valueX, ly);
+                        line = words[n] + " ";
+                        ly += 20;
+                        curY += 20; 
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, valueX, ly);
+            } 
+            else {
+                if(f.boldVal) ctx.font = `bold ${f.sizeVal || '18px'} Arial`;
+                else ctx.font = valueFont;
+                let yOffset = f.boldVal ? -8 : 0;
+                ctx.fillText(f.v, valueX, curY + yOffset);
+            }
+            curY += lineHeight;
+        });
+    }
+
+    function drawMarketedBy(x, y) {
+        ctx.fillStyle = "black";
+        ctx.font = "bold 18px Arial";
+        ctx.fillText("Marketed by :", x, y);
+        ctx.font = "16px Arial";
+        const lines = get('r_marketed').split('\n');
+        let cy = y + 25;
+        lines.forEach(line => { ctx.fillText(line, x, cy); cy += 20; });
+    }
+
+    function drawComplaints(x, y) {
+        ctx.fillStyle = "black";
+        ctx.font = "bold 18px Arial";
+        ctx.fillText("For Consumer Complaints please Contact:", x, y);
+        ctx.font = "14px Arial"; 
+        const lines = get('r_complaints').split('\n');
+        let cy = y + 25;
+        lines.forEach(line => { ctx.fillText(line, x, cy); cy += 18; });
+    }
+
+    function drawManufacturedBy(x, y, w, h) {
+        ctx.save();
+        ctx.translate(x, h + 10); 
+        ctx.rotate(-Math.PI / 2); 
+        const textX = 10; 
+        const textY = 30; 
+        ctx.textAlign = "left";
+        ctx.font = "bold 18px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Manufactured By :", textX, textY);
+        ctx.font = "15px Arial";
+        const lines = get('r_manufactured').split('\n');
+        let currentY = textY + 25; 
+        lines.forEach(line => { ctx.fillText(line, 10, currentY); currentY += 18; });
+        ctx.restore();
+    }
+
+    function dl() {
+        const link = document.createElement('a');
+        link.download = 'puma-label-12x5.2.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+
+    window.onload = draw;
+</script>
+
+</body>
+</html>
